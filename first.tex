@@ -1,0 +1,56 @@
+\documentclass[12pt,a4paper]{ctexart}
+
+% ── 中文支持 ──
+% 使用 ctexart 文档类，自动处理中文字体
+
+% ── 页面设置 ──
+\usepackage[margin=2.5cm]{geometry}
+
+% ── 数学公式 ──
+\usepackage{amsmath,amssymb}
+
+% ── 超链接 ──
+\usepackage[hidelinks]{hyperref}
+
+% ── 标题、作者、日期 ──
+\title{我的第一篇 \LaTeX{} 文档}
+\author{LIK}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{第一节}
+
+Hello, \LaTeX! 这是我的第一篇中文文档。
+
+\subsection{数学公式示例}
+
+行内公式：$E = mc^2$
+
+独立公式：
+\begin{equation}
+    \sum_{i=1}^{n} i = \frac{n(n+1)}{2}
+\end{equation}
+
+\subsection{列表}
+
+无序列表：
+\begin{itemize}
+    \item 学习 Git
+    \item 学习 \LaTeX
+    \item 学习 Python
+\end{itemize}
+
+有序列表：
+\begin{enumerate}
+    \item 编译成功！
+    \item 继续学习。
+\end{enumerate}
+
+\section{第二节}
+
+今天是一个不错的开始。
+
+\end{document}

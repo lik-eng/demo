@@ -1,0 +1,20 @@
+# 依赖
+node_modules/
+
+# 编辑器 / 工具配置
+.claude/
+.obsidian/
+.agents/
+
+# 编译产物
+first.pdf
+
+# Office 文档（太大，不适合 Git）
+*.docx
+
+# 系统文件
+Thumbs.db
+.DS_Store
+
+# 日志
+*.log

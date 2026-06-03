@@ -1,0 +1,53 @@
+{
+    // ========================================
+    // 🎯 demo 项目专属设置
+    // 这些设置仅在此工作区生效
+    // ========================================
+
+    // ── LaTeX ───────────────────────────────
+    "latex-workshop.latex.outDir": "%DIR%/build",
+    "latex-workshop.latex.autoBuild.run": "onSave",
+
+    // ── Live Server (NBA MBTI 预览) ─────────
+    "liveServer.settings.root": "/nba-mbti",
+    "liveServer.settings.port": 5500,
+
+    // ── 前端格式化 ──────────────────────────
+    "[html]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.tabSize": 2
+    },
+    "[css]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.tabSize": 2
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.tabSize": 2
+    },
+
+    // ── Python ──────────────────────────────
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.python",
+        "editor.tabSize": 4
+    },
+
+    // ── 文件嵌套（整洁的资源管理器） ────────
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.patterns": {
+        "*.tex": "${capture}.pdf, ${capture}.aux, ${capture}.log, ${capture}.out, ${capture}.synctex.gz",
+        "*.html": "${capture}.css, ${capture}.js",
+        "package.json": "package-lock.json, .gitignore"
+    },
+
+    // ── 排除构建产物 ────────────────────────
+    "files.exclude": {
+        "**/build/": true,
+        "**/*.aux": true,
+        "**/*.log": true,
+        "**/*.out": true,
+        "**/*.synctex.gz": true,
+        "**/*.fdb_latexmk": true,
+        "**/*.fls": true
+    }
+}
