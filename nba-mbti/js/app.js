@@ -16,18 +16,39 @@ const AppState = {
    ================================================================ */
 
 function showSection(name) {
-  document.querySelectorAll('.section').forEach(s => {
-    s.classList.add('hidden');
-  });
-
+  const current = document.querySelector('.section:not(.hidden)');
   const target = document.getElementById(name);
-  if (target) {
-    target.classList.remove('hidden');
-    AppState.currentSection = name;
+  if (!target || target === current) return;
 
-    // 滚动到顶部
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  // 淡出当前 section
+  if (current) {
+    current.style.opacity = '0';
+    current.style.transition = 'opacity 0.25s ease';
+    setTimeout(() => {
+      current.classList.add('hidden');
+      current.style.opacity = '';
+      current.style.transition = '';
+      // 淡入目标 section
+      showTarget(target, name);
+    }, 250);
+  } else {
+    showTarget(target, name);
   }
+}
+
+function showTarget(target, name) {
+  target.classList.remove('hidden');
+  target.style.opacity = '0';
+  target.style.transition = 'opacity 0.3s ease';
+  requestAnimationFrame(() => {
+    target.style.opacity = '1';
+  });
+  setTimeout(() => {
+    target.style.opacity = '';
+    target.style.transition = '';
+  }, 350);
+  AppState.currentSection = name;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 /* ================================================================
@@ -69,7 +90,7 @@ function renderQuestion(index) {
   btnA.disabled = false;
   btnB.disabled = false;
 
-  // 检查是否已答过（用于"上一题"导航）
+  // 检查是否已答过（用于"上一题"导航）——高亮之前的选择但允许重新选择
   const existing = answers.find(a => a.questionId === q.id);
   if (existing) {
     if (existing.pole === q.options[0].pole) {
@@ -77,8 +98,6 @@ function renderQuestion(index) {
     } else {
       btnB.classList.add('answer-btn--selected');
     }
-    btnA.disabled = true;
-    btnB.disabled = true;
   }
 
   // 更新进度条
@@ -126,10 +145,6 @@ function handleAnswer(optionKey) {
 function previousQuestion() {
   if (AppState.currentQuestion <= 0) return;
 
-  // 回退前移除当前题的答案
-  const q = QUESTIONS[AppState.currentQuestion];
-  removeAnswer(q.id);
-
   AppState.currentQuestion--;
   renderQuestion(AppState.currentQuestion);
 }
@@ -161,9 +176,31 @@ function finishTest() {
   AppState.topMatches = getTopMatches(userScores, NBA_STARS, 3);
   AppState.allMatches = getAllMatchesRanked(userScores, NBA_STARS);
 
-  // 展示结果
-  showSection('results');
-  renderResults();
+  // 展示"分析中"揭晓动画，1.5秒后跳转结果页
+  showAnalyzingOverlay(() => {
+    showSection('results');
+    renderResults();
+  });
+}
+
+function showAnalyzingOverlay(callback) {
+  const overlay = document.createElement('div');
+  overlay.className = 'analyzing-overlay';
+  overlay.innerHTML =
+    '<div class="analyzing__content">' +
+      '<div class="analyzing__dots"><span></span><span></span><span></span></div>' +
+      '<p class="analyzing__text">正在分析你的NBA灵魂匹配...</p>' +
+    '</div>';
+  document.body.appendChild(overlay);
+
+  setTimeout(() => {
+    overlay.style.opacity = '0';
+    overlay.style.transition = 'opacity 0.3s ease';
+    setTimeout(() => {
+      overlay.remove();
+      callback();
+    }, 300);
+  }, 1500);
 }
 
 /* ================================================================
@@ -391,7 +428,17 @@ function drawRadarChart(canvasId, scores, isSmall) {
   if (!canvas || !scores) return;
 
   const ctx = canvas.getContext('2d');
-  const size = canvas.width;
+
+  // HiDPI 适配：按 devicePixelRatio 放大 canvas 像素，CSS 大小不变
+  const dpr = window.devicePixelRatio || 1;
+  const cssSize = isSmall ? 200 : 300;
+  canvas.width = cssSize * dpr;
+  canvas.height = cssSize * dpr;
+  canvas.style.width = cssSize + 'px';
+  canvas.style.height = cssSize + 'px';
+  ctx.scale(dpr, dpr);
+
+  const size = cssSize;
   const center = size / 2;
   const count = RADAR_DIMENSIONS.length;
   const maxRadius = isSmall ? 75 : 115;
@@ -487,10 +534,7 @@ function drawRadarChart(canvasId, scores, isSmall) {
    ================================================================ */
 
 function retakeTest() {
-  resetTest();
-  AppState.currentQuestion = 0;
-  showSection('test');
-  renderQuestion(0);
+  startTest();
 }
 
 function shareResult() {

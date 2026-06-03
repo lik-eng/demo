@@ -92,9 +92,6 @@ body {
   opacity: 0;
   transform: translateY(20px);
 }
-.section--active {
-  display: flex;
-}
 
 /* ================================================================
    LANDING SECTION
@@ -903,7 +900,6 @@ body {
   background: var(--border-subtle);
   border-radius: 4px;
   position: relative;
-  overflow: hidden;
 }
 
 .dim-bar__fill {
@@ -911,6 +907,7 @@ body {
   border-radius: 4px;
   background: linear-gradient(90deg, var(--blue-nba), var(--gold));
   transition: width 1s ease 0.2s;
+  overflow: hidden;
 }
 
 .dim-bar__indicator {
@@ -1120,22 +1117,86 @@ body {
 }
 
 .card-animate {
-  animation: card-enter 0.5s ease forwards;
+  animation: card-enter 0.5s ease both;
 }
 
 /* Delayed entrance for secondary cards */
-.card-animate--delay-1 { animation-delay: 0.2s; opacity: 0; animation-fill-mode: forwards; }
-.card-animate--delay-2 { animation-delay: 0.4s; opacity: 0; animation-fill-mode: forwards; }
-.card-animate--delay-3 { animation-delay: 0.6s; opacity: 0; animation-fill-mode: forwards; }
+.card-animate--delay-1 { animation-delay: 0.2s; }
+.card-animate--delay-2 { animation-delay: 0.4s; }
+.card-animate--delay-3 { animation-delay: 0.6s; }
+
+/* ================================================================
+   ANALYZING OVERLAY — 揭晓动画
+   ================================================================ */
+.analyzing-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 1;
+}
+
+.analyzing__content {
+  text-align: center;
+}
+
+.analyzing__dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.analyzing__dots span {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--gold);
+  animation: analyzing-bounce 1.4s ease-in-out infinite;
+}
+
+.analyzing__dots span:nth-child(2) { animation-delay: 0.2s; }
+.analyzing__dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes analyzing-bounce {
+  0%, 80%, 100% { transform: scale(0.4); opacity: 0.3; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+.analyzing__text {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.05em;
+}
+
+/* ================================================================
+   IMAGE FALLBACK 美化
+   ================================================================ */
+.player-card__img-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 4rem;
+  color: rgba(245, 166, 35, 0.4);
+  background: linear-gradient(135deg, #1A1A35 0%, #0E0E20 50%, #1D428A20 100%);
+  text-shadow: 0 0 20px rgba(245, 166, 35, 0.2);
+}
+
+.player-card__img-fallback.hidden {
+  display: none;
+}
 
 /* ================================================================
    RESPONSIVE — TABLET (≤768px)
    ================================================================ */
 @media (max-width: 768px) {
-  .question-card__answers {
-    grid-template-columns: 1fr;
-  }
-
   .results__secondary {
     grid-template-columns: 1fr;
     gap: 1rem;
@@ -1156,6 +1217,13 @@ body {
 
   .player-card--secondary .player-card__image-wrap {
     height: 120px;
+  }
+}
+
+/* 640px: 答案按钮切单列，避免中等宽度下文字拥挤 */
+@media (max-width: 640px) {
+  .question-card__answers {
+    grid-template-columns: 1fr;
   }
 }
 
