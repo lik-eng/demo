@@ -1,6 +1,6 @@
 /* ================================================================
    NBA STAR MBTI — 数据中心
-   32位NBA球星对应16种MBTI人格（每类型2人）+ 20道测试题 + 雷达图属性
+   33位NBA球星对应16种MBTI人格 + 20道测试题 + 雷达图属性
    ================================================================ */
 
 const NBA_STARS = [
@@ -33,7 +33,7 @@ const NBA_STARS = [
     team: "圣安东尼奥马刺",
     position: "中锋",
     mbtiType: "ISTJ",
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/David_Robinson_%28cropped%29.jpg/640px-David_Robinson_%28cropped%29.jpg",
+    imageUrl: "https://cdn.nba.com/headshots/nba/latest/1040x760/764.png",
     traits: ["自律", "正直", "绅士", "沉着"],
     strengths: ["攻防一体", "盖帽大师", "海军服役背景", "社区楷模"],
     description: "大卫·罗宾逊是ISTJ的典范——海军学院毕业，服役两年后才进入NBA，将纪律和责任感刻在骨子里。他的比赛风格如同一台精密运转的机器：防守端的封盖时机完美无瑕，进攻端的脚步扎实有力。和马刺另一位ISTJ邓肯组成'双塔'时，两人用无可挑剔的职业精神定义了马刺文化。场外的他同样是楷模——慈善、教育、回馈社区，ISTJ的责任感在他身上体现得淋漓尽致。",
@@ -455,7 +455,7 @@ const NBA_STARS = [
     team: "洛杉矶湖人",
     position: "控球后卫",
     mbtiType: "ENFJ",
-    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Magic_Johnson_%2825117662488%29_%28cropped%29.jpg/640px-Magic_Johnson_%2825117662488%29_%28cropped%29.jpg",
+    imageUrl: "https://cdn.nba.com/headshots/nba/latest/1040x760/77142.png",
     traits: ["魅力非凡", "鼓舞人心", "远见卓识", "慷慨大方"],
     strengths: ["Showtime指挥家", "不看人传球", "位置革命先驱", "领导力与快乐"],
     description: "ENFJ'主人公'——魔术师不只是打篮球，他指挥交响乐。'Showtime'湖人是体育史上最具娱乐性的王朝，而魔术师是他们魅力四射的领袖。像ENFJ一样，魔术师的天才在于提升他人——他的不看人传球、他感染力十足的笑容、他让每个队友都感觉自己是明星的能力。他彻底改变了控卫位置（2米06的组织者前所未闻），并在球员、球迷和运动之间架起了桥梁。ENFJ激励人们成为最好的自己——魔术师让篮球成为了最好的篮球。",
@@ -642,6 +642,24 @@ const NBA_STARS = [
     accolades: "6届NBA总冠军·6届MVP·2届FMVP·19届全明星·历史得分王（39年）·名人堂",
     dimensionScores: { E:3, I:2, S:0, N:5, T:5, F:0, J:5, P:0 },
     radarScores: { scoring: 96, defense: 90, playmaking: 70, athleticism: 85, bbiq: 95, leadership: 94 }
+  },
+  {
+    id: "victor-wembanyama",
+    name: "维克托·文班亚马",
+    nameEn: "Victor Wembanyama",
+    nickname: "外星人 / Wemby",
+    team: "圣安东尼奥马刺",
+    position: "中锋 / 大前锋",
+    mbtiType: "INTJ",
+    imageUrl: "https://cdn.nba.com/headshots/nba/latest/1040x760/1641705.png",
+    traits: ["战略远见", "非传统", "冷静专注", "持续进化"],
+    strengths: ["历史级护框", "七尺四寸控运投", "空间投射", "防守覆盖面积"],
+    description: "文班亚马是新时代INTJ的代表——他像一套还在进化的未来篮球系统。2米24的身高配合后卫式控运、外线投射和覆盖半场的防守影响力，让他几乎不像传统位置里的任何一种球员。像INTJ一样，他不只是执行现有打法，而是在重新定义篮球可以是什么：中锋可以发起进攻，可以投超远三分，可以从弱侧一步封锁篮筐。他的天赋惊人，但更可怕的是那种冷静、清醒、长期主义的进化感——这就是外星人真正的含义。",
+    signatureMove: "外线持球三分 / 长臂遮天封盖",
+    twoKRating: 94,
+    accolades: "年度最佳新秀·全明星·最佳防守阵容·盖帽王",
+    dimensionScores: { E:1, I:4, S:0, N:5, T:5, F:0, J:4, P:1 },
+    radarScores: { scoring: 88, defense: 99, playmaking: 78, athleticism: 92, bbiq: 90, leadership: 80 }
   }
 ];
 
