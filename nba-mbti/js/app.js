@@ -1,8 +1,3 @@
-/* ================================================================
-   NBA STAR MBTI — 应用控制器
-   页面导航、题目流程、结果渲染（含雷达图）、动画
-   ================================================================ */
-
 const AppState = {
   currentSection: 'landing',
   currentQuestion: 0,       // 0-indexed into QUESTIONS array
@@ -10,10 +5,6 @@ const AppState = {
   topMatches: [],
   allMatches: []
 };
-
-/* ================================================================
-   页面导航
-   ================================================================ */
 
 function showSection(name) {
   const current = document.querySelector('.section:not(.hidden)');
@@ -40,9 +31,7 @@ function showTarget(target, name) {
   target.classList.remove('hidden');
   target.style.opacity = '0';
   target.style.transition = 'opacity 0.3s ease';
-  requestAnimationFrame(() => {
-    target.style.opacity = '1';
-  });
+  requestAnimationFrame(() => { target.style.opacity = '1'; });
   setTimeout(() => {
     target.style.opacity = '';
     target.style.transition = '';
@@ -50,10 +39,6 @@ function showTarget(target, name) {
   AppState.currentSection = name;
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-
-/* ================================================================
-   首页 → 测试
-   ================================================================ */
 
 function startTest() {
   resetTest();
@@ -64,10 +49,6 @@ function startTest() {
   showSection('test');
   renderQuestion(0);
 }
-
-/* ================================================================
-   题目渲染与交互
-   ================================================================ */
 
 function renderQuestion(index) {
   if (index < 0 || index >= QUESTIONS.length) return;
@@ -90,55 +71,35 @@ function renderQuestion(index) {
   btnA.disabled = false;
   btnB.disabled = false;
 
-  // 检查是否已答过（用于"上一题"导航）——高亮之前的选择但允许重新选择
   const existing = answers.find(a => a.questionId === q.id);
   if (existing) {
-    if (existing.pole === q.options[0].pole) {
-      btnA.classList.add('answer-btn--selected');
-    } else {
-      btnB.classList.add('answer-btn--selected');
-    }
+    (existing.pole === q.options[0].pole ? btnA : btnB).classList.add('answer-btn--selected');
   }
 
-  // 更新进度条
   updateProgress();
+  document.getElementById('btn-prev').disabled = index === 0;
 
-  // 更新上一题按钮状态
-  document.getElementById('btn-prev').disabled = (index === 0);
-
-  // 卡片入场动画
   const card = document.getElementById('question-card');
   card.style.animation = 'none';
-  card.offsetHeight; // 强制回流
+  card.offsetHeight;
   card.style.animation = 'card-enter 0.45s ease forwards';
 }
 
 function handleAnswer(optionKey) {
   const q = QUESTIONS[AppState.currentQuestion];
   const option = optionKey === 'A' ? q.options[0] : q.options[1];
-
-  // 视觉效果——高亮选中项
   const btnA = document.getElementById('answer-a');
   const btnB = document.getElementById('answer-b');
   btnA.classList.remove('answer-btn--selected');
   btnB.classList.remove('answer-btn--selected');
-
-  const selectedBtn = optionKey === 'A' ? btnA : btnB;
-  selectedBtn.classList.add('answer-btn--selected');
+  (optionKey === 'A' ? btnA : btnB).classList.add('answer-btn--selected');
   btnA.disabled = true;
   btnB.disabled = true;
-
-  // 记录答案
   recordAnswer(q.id, option.pole);
-
-  // 短暂延迟后跳转，让动画播放
   setTimeout(() => {
-    if (AppState.currentQuestion < QUESTIONS.length - 1) {
-      AppState.currentQuestion++;
-      renderQuestion(AppState.currentQuestion);
-    } else {
-      finishTest();
-    }
+    AppState.currentQuestion < QUESTIONS.length - 1
+      ? (AppState.currentQuestion++, renderQuestion(AppState.currentQuestion))
+      : finishTest();
   }, 350);
 }
 
@@ -160,23 +121,13 @@ function quitTest() {
 function updateProgress() {
   const pct = ((AppState.currentQuestion + 1) / QUESTIONS.length) * 100;
   document.getElementById('progress-fill').style.width = pct + '%';
-  document.getElementById('progress-count').textContent =
-    (AppState.currentQuestion + 1) + ' / ' + QUESTIONS.length;
+  document.getElementById('progress-count').textContent = `${AppState.currentQuestion + 1} / ${QUESTIONS.length}`;
 }
 
-/* ================================================================
-   测试完成 → 结果页
-   ================================================================ */
-
 function finishTest() {
-  // 判定 MBTI 类型
   AppState.userMBTI = determineMBTIType(userScores);
-
-  // 获取排名
   AppState.topMatches = getTopMatches(userScores, NBA_STARS, 3);
   AppState.allMatches = getAllMatchesRanked(userScores, NBA_STARS);
-
-  // 展示"分析中"揭晓动画，1.5秒后跳转结果页
   showAnalyzingOverlay(() => {
     showSection('results');
     renderResults();
@@ -203,30 +154,13 @@ function showAnalyzingOverlay(callback) {
   }, 1500);
 }
 
-/* ================================================================
-   结果页渲染
-   ================================================================ */
-
 function renderResults() {
-  // MBTI 徽章
   document.getElementById('result-mbti-badge').textContent = AppState.userMBTI;
-
-  // 主卡片（最佳匹配）
   renderPrimaryCard(AppState.topMatches[0]);
-
-  // 第二、第三匹配
   renderSecondaryCards(AppState.topMatches[1], AppState.topMatches[2]);
-
-  // 维度分析
   renderDimensionBreakdown();
-
-  // 全部排名
   renderAllStarsGrid();
-
-  // 重置折叠状态
   document.getElementById('allstars-grid').classList.add('hidden');
-
-  // 触发交错动画
   requestAnimationFrame(() => {
     document.querySelectorAll('.card-animate--delay-1, .card-animate--delay-2').forEach(el => {
       el.style.animation = 'none';
@@ -237,56 +171,32 @@ function renderResults() {
 }
 
 function renderPrimaryCard(star) {
-  // 图片
   const img = document.getElementById('primary-img');
   const fallback = document.getElementById('primary-fallback');
+  img.onerror = () => {
+    img.style.display = 'none';
+    fallback.classList.remove('hidden');
+  };
   img.src = star.imageUrl;
   img.alt = star.name;
   img.style.display = '';
   fallback.classList.add('hidden');
   fallback.textContent = star.name[0];
 
-  // 2K评分徽章
   document.getElementById('primary-rating').textContent = star.twoKRating;
-
-  // 姓名 & 昵称
   document.getElementById('primary-name').textContent = star.name;
-  document.getElementById('primary-nickname').textContent = '「' + star.nickname + '」';
-
-  // 标签
+  document.getElementById('primary-nickname').textContent = `「${star.nickname}」`;
   document.getElementById('primary-team').textContent = star.team;
   document.getElementById('primary-position').textContent = star.position;
   document.getElementById('primary-mbti').textContent = star.mbtiType;
-
-  // 匹配度环形图
-  document.getElementById('primary-percent').textContent = star.matchPercent + '%';
-  const ring = document.getElementById('primary-ring');
-  ring.style.setProperty('--ring-pct', star.matchPercent + '%');
-
-  // 描述
+  document.getElementById('primary-percent').textContent = `${star.matchPercent}%`;
+  document.getElementById('primary-ring').style.setProperty('--ring-pct', `${star.matchPercent}%`);
   document.getElementById('primary-desc').textContent = star.description;
-
-  // 特质标签
-  const traitsContainer = document.getElementById('primary-traits');
-  traitsContainer.innerHTML = star.traits.map(t =>
-    '<span class="trait-tag">' + t + '</span>'
-  ).join('');
-
-  // 六维雷达图
+  document.getElementById('primary-traits').innerHTML = star.traits.map(t => `<span class="trait-tag">${t}</span>`).join('');
   drawRadarChart('primary-radar', star.radarScores);
-
-  // 强项条
-  const strengthsContainer = document.getElementById('primary-strengths');
-  strengthsContainer.innerHTML = star.strengths.map((s, i) =>
-    '<div class="strength-bar">' +
-      '<span class="strength-bar__label">' + s + '</span>' +
-      '<div class="strength-bar__track">' +
-        '<div class="strength-bar__fill" style="width: ' + (95 - i * 8) + '%;"></div>' +
-      '</div>' +
-    '</div>'
+  document.getElementById('primary-strengths').innerHTML = star.strengths.map((s, i) =>
+    `<div class="strength-bar"><span class="strength-bar__label">${s}</span><div class="strength-bar__track"><div class="strength-bar__fill" style="width:${95-i*8}%;"></div></div></div>`
   ).join('');
-
-  // 额外信息
   document.getElementById('primary-move').textContent = star.signatureMove;
   document.getElementById('primary-accolades').textContent = star.accolades;
 }
